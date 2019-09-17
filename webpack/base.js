@@ -3,6 +3,7 @@ const WebpackBar = require('webpackbar');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -43,6 +44,27 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: './index.html',
+    }),
+    new FaviconsWebpackPlugin({
+      logo: './assets/sprites/logo.png',
+      prefix: 'favicons',
+      favicons: {
+        appName: 'Phaser 3 Project Template',
+        start_url: '/',
+        display: 'fullscreen',
+        background: '#fff',
+        theme_color: '#fff',
+        icons: {
+          android: true,
+          appleIcon: true,
+          appleStartup: true,
+          coast: false,
+          favicons: true,
+          firefox: false,
+          windows: true,
+          yandex: true,
+        },
+      },
     }),
   ],
 };

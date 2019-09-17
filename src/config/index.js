@@ -11,10 +11,9 @@ const config = {
   render: { pixelArt: false },
   banner: !isProd,
   scale: {
-    width: '100%',
+    width: 800,
     height: 600,
     mode: Phaser.Scale.ScaleModes.FIT,
-    autoCenter: Phaser.Scale.CENTER_BOTH,
   },
   physics: {
     default: 'arcade',
