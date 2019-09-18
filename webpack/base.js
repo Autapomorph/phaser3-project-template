@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const WebpackBar = require('webpackbar');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const DotenvWebpackPlugin = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
@@ -35,6 +36,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new DotenvWebpackPlugin(),
     new WebpackBar(),
     new FriendlyErrorsWebpackPlugin(),
     new CleanWebpackPlugin(),
