@@ -14,28 +14,42 @@ class Player extends Phaser.GameObjects.Sprite {
 
     // physics
     this.scene.physics.world.enable(this);
-    this.body.setCollideWorldBounds(true);
-    this.body.setMaxVelocity(500);
-    this.body.setAngularDrag(15);
-    this.body.maxAngular = 100;
-    this.body.setBounceY(1);
+    const { body } = this;
+    body.setCollideWorldBounds(true);
+    body.setBounce(0.8);
+    body.setDrag(3);
+    body.setAngularDrag(15);
+    body.maxAngular = 300;
+    body.debugShowBody = false;
+    body.debugShowVelocity = false;
 
     // input
     this.cursors = this.scene.input.keyboard.createCursorKeys();
   }
 
   update() {
-    if (this.body.onFloor()) {
+    const { body } = this;
+
+    if (body.onFloor() && body.velocity.y < -120) {
       const camera = this.scene.cameras.main;
       camera.shakeEffect.reset();
       camera.shake(1000, 0.01);
     }
 
-    this.body.setAngularAcceleration(0);
+    body.setAcceleration(0, 0);
+    body.setAngularAcceleration(0);
+    if (this.cursors.up.isDown) {
+      body.setAccelerationY(-300);
+    } else if (this.cursors.up.isDown) {
+      body.setAccelerationY(300);
+    }
+
     if (this.cursors.left.isDown) {
-      this.body.setAngularAcceleration(-100);
+      body.setAccelerationX(-300);
+      body.setAngularAcceleration(-300);
     } else if (this.cursors.right.isDown) {
-      this.body.setAngularAcceleration(100);
+      body.setAccelerationX(300);
+      body.setAngularAcceleration(300);
     }
   }
 }

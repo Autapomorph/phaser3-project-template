@@ -46,7 +46,7 @@ module.exports = {
       template: './src/index.html',
     }),
     new FaviconsWebpackPlugin({
-      logo: './assets/sprites/logo.png',
+      logo: './assets/icons/logo.png',
       prefix: 'favicons',
       favicons: {
         appName: 'Phaser 3 Project Template',

@@ -10,7 +10,9 @@ class SceneButton extends Phaser.GameObjects.Container {
     this.x = x;
     this.y = y;
 
-    this.button = this.scene.add.sprite(0, 0, textures.default).setInteractive();
+    this.button = this.scene.add.sprite(0, 0, textures.default).setInteractive({
+      useHandCursor: true,
+    });
     this.text = this.scene.add.text(0, 0, text, { fontSize: '32px', fill: '#fff' });
     Phaser.Display.Align.In.Center(this.text, this.button);
 
