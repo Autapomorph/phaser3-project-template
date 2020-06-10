@@ -1,60 +1,82 @@
 const merge = require('webpack-merge');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const OfflinePlugin = require('offline-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
-const base = require('./base');
+const commonConfig = require('./common');
 
-module.exports = merge.smart(base, {
-  mode: 'production',
-  output: {
-    filename: 'bundle.[contenthash].js',
-  },
-  devtool: false,
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
-      },
-    ],
-  },
-  plugins: [
-    new CopyPlugin({
-      patterns: [
+module.exports = (env = {}) =>
+  merge.smart(commonConfig, {
+    mode: 'production',
+    output: {
+      filename: '[name].[contenthash].js',
+      chunkFilename: '[name].[contenthash].js',
+    },
+    module: {
+      rules: [
         {
-          from: 'assets',
-          to: 'assets',
+          test: /\.css$/,
+          use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
         },
       ],
-    }),
-    new MiniCssExtractPlugin({
-      filename: 'style.[contenthash].css',
-    }),
-    new OfflinePlugin(),
-  ],
-  optimization: {
-    minimizer: [
-      new TerserPlugin({
-        terserOptions: {
-          output: {
-            comments: false,
+    },
+    plugins: [
+      new CleanWebpackPlugin(),
+      new CopyPlugin({
+        patterns: [
+          {
+            from: 'assets',
+            to: 'assets',
           },
-        },
-        extractComments: false,
+        ],
       }),
-      new OptimizeCSSAssetsPlugin(),
+      new MiniCssExtractPlugin({
+        filename: '[name].[contenthash].css',
+        chunkFilename: '[name].[contenthash].css',
+      }),
+      new OfflinePlugin({
+        responseStrategy: 'network-first',
+        caches: {
+          main: [':rest:'],
+          additional: [':externals:'],
+          optional: ['favicons/**/*'],
+        },
+        safeToUseOptionalCaches: true,
+        ServiceWorker: {
+          events: true,
+        },
+      }),
+      new BundleAnalyzerPlugin({ analyzerMode: env.analyze ? 'server' : 'disabled' }),
     ],
-  },
-  performance: {
-    maxEntrypointSize: 900000,
-    maxAssetSize: 900000,
-  },
-  stats: {
-    all: false,
-    assets: true,
-    excludeAssets: [/assets/, /favicons/],
-  },
-});
+    optimization: {
+      moduleIds: 'hashed',
+      runtimeChunk: true,
+      splitChunks: {
+        chunks: 'all',
+      },
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            output: {
+              comments: false,
+            },
+          },
+          extractComments: false,
+        }),
+        new OptimizeCSSAssetsPlugin(),
+      ],
+    },
+    performance: {
+      maxEntrypointSize: 1 * 1024 * 1024,
+      maxAssetSize: 1 * 1024 * 1024,
+    },
+    stats: {
+      all: false,
+      assets: true,
+      excludeAssets: [/assets/, /favicons/],
+    },
+  });

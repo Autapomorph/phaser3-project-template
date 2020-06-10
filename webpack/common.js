@@ -1,17 +1,15 @@
-const webpack = require('webpack');
+const { EnvironmentPlugin } = require('webpack');
+const DotenvWebpackPlugin = require('dotenv-webpack');
 const WebpackBar = require('webpackbar');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const DotenvWebpackPlugin = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
 module.exports = {
-  mode: 'development',
-  devtool: 'eval-source-map',
-  devServer: {
-    open: true,
-    quiet: true,
+  entry: './src/index.js',
+  output: {
+    filename: '[name].js',
+    chunkFilename: '[name].js',
   },
   module: {
     rules: [
@@ -37,16 +35,15 @@ module.exports = {
     ],
   },
   plugins: [
-    new DotenvWebpackPlugin(),
     new WebpackBar(),
     new FriendlyErrorsWebpackPlugin(),
-    new CleanWebpackPlugin(),
-    new webpack.DefinePlugin({
-      CANVAS_RENDERER: JSON.stringify(true),
-      WEBGL_RENDERER: JSON.stringify(true),
+    new DotenvWebpackPlugin(),
+    new EnvironmentPlugin({
+      CANVAS_RENDERER: true,
+      WEBGL_RENDERER: true,
     }),
     new HtmlWebpackPlugin({
-      template: './index.html',
+      template: './src/index.html',
     }),
     new FaviconsWebpackPlugin({
       logo: './assets/sprites/logo.png',
@@ -58,14 +55,10 @@ module.exports = {
         background: '#fff',
         theme_color: '#fff',
         icons: {
-          android: true,
-          appleIcon: true,
-          appleStartup: true,
           coast: false,
-          favicons: true,
           firefox: false,
-          windows: true,
-          yandex: true,
+          windows: false,
+          yandex: false,
         },
       },
     }),
