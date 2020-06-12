@@ -10,6 +10,7 @@ module.exports = {
   mode: 'development',
   devtool: 'eval-source-map',
   devServer: {
+    open: true,
     quiet: true,
   },
   module: {

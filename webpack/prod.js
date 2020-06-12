@@ -22,21 +22,19 @@ module.exports = merge.smart(base, {
     ],
   },
   plugins: [
-    new CopyPlugin([
-      {
-        from: 'assets',
-        to: 'assets',
-      },
-    ]),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: 'assets',
+          to: 'assets',
+        },
+      ],
+    }),
     new MiniCssExtractPlugin({
       filename: 'style.[contenthash].css',
     }),
     new OfflinePlugin(),
   ],
-  performance: {
-    maxEntrypointSize: 900000,
-    maxAssetSize: 900000,
-  },
   optimization: {
     minimizer: [
       new TerserPlugin({
@@ -45,8 +43,18 @@ module.exports = merge.smart(base, {
             comments: false,
           },
         },
+        extractComments: false,
       }),
       new OptimizeCSSAssetsPlugin(),
     ],
+  },
+  performance: {
+    maxEntrypointSize: 900000,
+    maxAssetSize: 900000,
+  },
+  stats: {
+    all: false,
+    assets: true,
+    excludeAssets: [/assets/, /favicons/],
   },
 });
