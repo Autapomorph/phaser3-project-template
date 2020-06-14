@@ -9,6 +9,8 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const commonConfig = require('./common');
 
+process.env.NODE_ENV = 'production';
+
 module.exports = (env = {}) =>
   merge.smart(commonConfig, {
     mode: 'production',
