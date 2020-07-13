@@ -5,7 +5,7 @@ import { isProd } from '../utils';
 const config = {
   title: 'Phaser 3 Project Template',
   url: 'https://example.org',
-  version: '1.0',
+  version: '1.2.2',
   type: Phaser.AUTO,
   backgroundColor: '#000',
   render: { pixelArt: false },
