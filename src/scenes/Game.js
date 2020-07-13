@@ -32,7 +32,7 @@ class GameScene extends Phaser.Scene {
 
     this.tweens.add({
       targets: player,
-      scale: 0.8,
+      scale: 0.6,
       duration: 2000,
       ease: Phaser.Math.Easing.Linear,
     });

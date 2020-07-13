@@ -1,4 +1,4 @@
-const merge = require('webpack-merge');
+const { mergeWithCustomize } = require('webpack-merge');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -12,7 +12,20 @@ const commonConfig = require('./common');
 process.env.NODE_ENV = 'production';
 
 module.exports = (env = {}) =>
-  merge.smart(commonConfig, {
+  mergeWithCustomize({
+    customizeArray(a, b, key) {
+      // Use b's rule for /\.css$/
+      if (key === 'module.rules') {
+        const findCSSRuleIndex = rules =>
+          rules.findIndex(rule => String(rule.test) === String(/\.css$/));
+        a.splice(findCSSRuleIndex(a), 1, b[findCSSRuleIndex(b)]);
+        return a;
+      }
+
+      // Fall back to default merging
+      return undefined;
+    },
+  })(commonConfig, {
     mode: 'production',
     output: {
       filename: '[name].[contenthash].js',
